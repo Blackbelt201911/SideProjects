@@ -1,94 +1,56 @@
-import tkinter as tk
-import time
-from tkinter import *
-from tkinter import colorchooser
-import random
+import socket
+import tqdm
+import os
 
+# device's IP address
+SERVER_HOST = "0.0.0.0"
+SERVER_PORT = 5001
 
+# receive 4096 bytes each time
+BUFFER_SIZE = 4096
 
+SEPARATOR = "<SEPARATOR>"
 
-window = tk.Tk() #instantiate an instance of a window
-window.geometry("420x420")
-window.title("test")
+# create the server socket
+# TCP socket
+s = socket.socket()
+# bind the socket to our local address
+s.bind((SERVER_HOST, SERVER_PORT))
+# enabling our server to accept connections
+# 5 here is the number of unaccepted connections that
+# the system will allow before refusing new connections
+s.listen(5)
+print(f"[*] Listening as {SERVER_HOST}:{SERVER_PORT}")
+# accept connection if there is any
+client_socket, address = s.accept() 
+# if below code is executed, that means the sender is connected
+print(f"[+] {address} is connected.")
 
+# receive the file infos
+# receive using client socket, not server socket
+received = client_socket.recv(BUFFER_SIZE).decode()
+filename, filesize = received.split(SEPARATOR)
+# remove absolute path if there is
+filename = os.path.basename(filename)
+# convert to integer
+filesize = int(filesize)
+# start receiving the file from the socket
+# and writing to the file stream
+progress = tqdm.tqdm(range(filesize), f"Receiving {filename}", unit="B", unit_scale=True, unit_divisor=1024)
+with open(filename, "wb") as f:
+    while True:
+        # read 1024 bytes from the socket (receive)
+        bytes_read = client_socket.recv(BUFFER_SIZE)
+        if not bytes_read:    
+            # nothing is received
+            # file transmitting is done
+            break
+        # write to the file the bytes we just received
+        f.write(bytes_read)
+        # update the progress bar
+        progress.update(len(bytes_read))
 
-
-class Player:
-    def __init__(self, canvas, color):
-        self.x = 0
-        self.y = 0
-        self.canvas = window
-        self.id = canvas.create_rectangle(0, 0, 75, 75, fill=color)
-        self.canvas_height = self.canvas.winfo_height()
-        self.canvas_width = self.canvas.winfo_height()
-        self.canvas_width = self.canvas_width * 1.83
-        canvas.bind_all('<KeyPress-d>', self.moving_right)
-        canvas.bind_all('<KeyPress-a>',self.moving_left)
-        canvas.bind_all('<KeyPress-w>', self.moving_up)
-        canvas.bind_all('<KeyPress-s>', self.moving_down)
-
-
-
-
-    def moving_right(self, event):
-        self.x = 7.5
-    def moving_left(self, event):
-        self.x = -7.5
-    def moving_up(self, event):
-        self.y = -7.5
-    def moving_down(self, event):
-        self.y = 7.5
-
-
-
-
-    def draw(self):
-            self.canvas.move(self.id, self.x, self.y)
-            pos = self.canvas.coords(self.id)
-            if pos[0] <= 0 or pos[2] >= self.canvas_width:
-                self.x = self.x * -1
-            if pos[1] <= 0 or pos[3] >= self.canvas_height:
-                self.y = self.y * -1
-
-
-class Ball:
-    def __init__(self, canvas, color, speed, up, player):
-        self.x = speed
-        self.y = up
-        self.canvas = canvas
-        self.id = canvas.create_oval(10,10,100,100, fill=color)
-        self.canvas.move(self.id, 900, 400)
-        self.canvas_height = self.canvas.winfo_height()
-        self.canvas_width = self.canvas.winfo_width()
-        self.player = player
-    def draw(self):
-        self.canvas.move(self.id, self.x, self.y)
-        pos = self.canvas.coords(self.id)
-        if pos[0] <= 0 or pos[2] >= self.canvas_width:
-             self.x = self.x * -1
-        if pos[1] <= 0 or pos[3] >= self.canvas_height:
-            self.y = self.y * -1
-    def hit(self):
-        p = self.canvas.coords(self.player.id)
-        coll = self.canvas.find_overlapping(p[0], p[1], p[2], p[3])
-        hello = list(coll)
-        if len(hello) != 1:
-            return True
-        return False
-tk = Tk()
-tk.title('Bounce the Game')
-tk.resizable(0,0)
-tk.wm_attributes()
-canvas = Canvas(tk, width=485774776832, height=485774776832, bd=0, highlightthickness=0)
-canvas.pack()
-tk.update()
-player = Player(canvas,'blue')
-ball = Ball(canvas, 'purple', 15, 20, player)
-pos = canvas.coords(ball.id)
-while True:
-    if ball.hit() == False:
-        player.draw()
-        ball.draw()
-        tk.update_idletasks()
-        tk.update()
-        time.sleep(0.01)
+# close the client socket
+client_socket.close()
+# close the server socket
+s.close()
