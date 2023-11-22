@@ -2,7 +2,7 @@ import socket
 import time
 
 PORT = 5050
-SERVER = "172.27.64.1"
+SERVER = socket.gethostname()
 ADDR = (SERVER, PORT)
 FORMAT = "utf-8"
 DISCONNECT_MESSAGE = "!DISCONNECT"
