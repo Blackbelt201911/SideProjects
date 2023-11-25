@@ -41,7 +41,9 @@ def handle_client(conn, addr):
 
 def start():
     print('[SERVER STARTED]!')
+    
     server.listen()
+
     while True:
         conn, addr = server.accept()
         with clients_lock:
