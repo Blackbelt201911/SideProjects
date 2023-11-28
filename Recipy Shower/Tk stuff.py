@@ -4,6 +4,7 @@ from json import *
 import ttkbootstrap as tb
 import socket
 import time
+import json
 
 PORT = 5050 #Where to concte to 
 SERVER = socket.gethostname() #what ip to conect to
@@ -46,12 +47,12 @@ def PostFunc():
     PostingText = PostText.get(1.0, "end-1c")
     print(PostingText)
 
-    connection = connect()
-    send(connection, MESSAGE)
-
     RecpieLable = Label(TabInRecipeTab, text = PostingText, font =('Courier', 18))  
     RecpieLable.pack()  
 
+    FStrText = (f"{PostingText}")
+
+    send(connection, FStrText)
 
 root = tb.Window(themename="darkly")
 
