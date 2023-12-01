@@ -67,7 +67,7 @@ RecipieTab = tb.Frame(Screens)
 my_canvas = Canvas(RecipieTab)
 my_canvas.pack(side=LEFT, fill=BOTH, expand=1)
 
-my_scroll_bar = ttk.Scrollbar(RecipieTab, orient=VERTICAL, command=my_canvas.yview)
+my_scroll_bar = tb.Scrollbar(RecipieTab, orient=VERTICAL, command=my_canvas.yview)
 my_scroll_bar.pack(side=RIGHT, fill=Y)
 
 my_canvas.configure(yscrollcommand=my_scroll_bar.set)
