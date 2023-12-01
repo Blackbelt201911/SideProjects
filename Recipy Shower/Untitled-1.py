@@ -1,55 +1,25 @@
-from tkinter import *
-import tkinter as tk
-import ttkbootstrap as tb
+# Program to show various ways to read and
+# write data in a text file.
 
-
-def PostText():    
-    inp = PostText.get(1.0, "end-1c") 
-    print(inp)
-
-
-root = tb.Window(themename="darkly")
-
-#root = Tk()
-root.title("Just like Mama's")
-root.geometry('720x500')
-
-Screens = tb.Notebook(root, bootstyle="dark")
-Screens.pack(pady=20)
-
-PostTab = tb.Frame(Screens)
-Recipies = tb.Frame(Screens)
+file = open("myfile.txt","w") #creates file
+L = ["This is Lagos","This is Python","This is Fcc"]
 
 
 
 
+file = open("myfile.txt","r+") 
+print("Output of the Read function is ")
+print(file.read())
+print()
+  
+# The seek(n) takes the file handle to the nth
+# byte from the start.
 
-my_scroll = tb.Scrollbar(Recipies, orient='vertical', bootstyle="dark round")
-my_scroll.pack(side="right", fill="y")
-
-
-
-
-label1 = Label(PostTab, text="Enter your Recipies", font=("Helvetica", 18))
-label1.pack(pady=20)
-
-PostTextE = Text(PostTab, width=70, height=10)
-PostTextE.pack(pady=10, padx=10)
-
-
-
-PostBT = tb.Button(PostTab, text="Post", bootstyle="danger outline", command = PostText)
-PostBT.pack(pady=20)
-
-my_label2 = Label(Recipies, text="Recipies", font=("Helvetica", 18))
-my_label2.pack(pady=20)
-
-# Add our frames to the notebook
-Screens.add(PostTab, text="Poster")
-Screens.add(Recipies, text="Recipies")
-
-
-
-
-root.mainloop()
+  
+file.seek(0)
+# readlines function
+print("Output of Readlines function is ") 
+print(file.readlines()) 
+print()
+file.close()
 
