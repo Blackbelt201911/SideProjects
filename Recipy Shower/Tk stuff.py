@@ -6,6 +6,7 @@ import socket
 import time
 import json
 
+COUNTER = "a"
 PORT = 5050 #Where to concte to 
 SERVER = socket.gethostname() #what ip to conect to
 ADDR = (SERVER, PORT) # Port and sever in one varbile
@@ -14,6 +15,7 @@ DISCONNECT_MESSAGE = "!DISCONNECT" # self explaintory
 MESSAGE = "Hello World" # self explaintory
 
 def connect():
+    global client
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #gets this device info and saves it
     client.connect(ADDR) #conctes to addr(Port and sever) using clint info
     return client # idk
@@ -50,10 +52,15 @@ def PostFunc():
     RecpieLable = Label(TabInRecipeTab, text = PostingText, font =('Courier', 18))  
     RecpieLable.pack()  
 
+    file = open("myfile.txt","w") #creates file
+    file.writelines(PostingText)  
+    
+
     FStrText = (f"{PostingText}")
 
-    send(connection, FStrText)
 
+    send(connection, FStrText)
+    send(connection, "myfile.txt")
 root = tb.Window(themename="darkly")
 
 #root = Tk()
