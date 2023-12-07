@@ -1,42 +1,17 @@
 import socket
-import time
-
-PORT = 5050
-SERVER = socket.gethostname()
-ADDR = (SERVER, PORT)
-FORMAT = "utf-8"
-DISCONNECT_MESSAGE = "!DISCONNECT"
-MESSAGE = "Hello World"
-
-def connect():
-    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client.connect(ADDR)
-    return client
-
-
-def send(client, msg):
-    message = msg.encode(FORMAT)
-    client.send(message)
-
-
-def start():
-    answer = input('Would you like to connect (yes/no)? ')
-    if answer.lower() != 'yes':
-        return
-   
-    connection = connect()
-    send(connection, MESSAGE)
-    while True:
-        msg = input("Message (q for quit): ")
-
-        if msg == 'q':
+ip = socket.gethostbyname(socket.gethostname())
+port = 9999
+addr=(ip,port)
+format="utf-8"
+file_name = 'file1..txt'
+client=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+client.connect(addr)
+file=open(file_name,"r")
+client.send(file_name.encode(format))
+a=client.recv(1024).decode()
+if a:
+    while 1:
+        data=file.read(1024)
+        if not data:
             break
-
-        send(connection, msg)
-
-    send(connection, DISCONNECT_MESSAGE)
-    time.sleep(1)
-    print('Disconnected')
-
-
-start()
+        client.send(data)

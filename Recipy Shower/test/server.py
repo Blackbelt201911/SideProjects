@@ -1,11 +1,18 @@
 import threading
 import socket
+import random 
 
 PORT = 5050
 SERVER = socket.gethostname()
 ADDR = (SERVER, PORT)
 FORMAT = "utf-8"
 DISCONNECT_MESSAGE = "!DISCONNECT"
+
+random.seed(2)
+
+count = random.randint(1, 99999999999999)
+
+realCount = str(count)
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
 server.bind(ADDR)
@@ -26,6 +33,12 @@ def handle_client(conn, addr):
 
             if msg == DISCONNECT_MESSAGE:
                 connected = False
+
+            file = open("Recipe."+realCount+"txt","w")
+
+            file.writelines(msg)
+            
+            file.close
 
             print(f"[{addr}] {msg}")
             with clients_lock:

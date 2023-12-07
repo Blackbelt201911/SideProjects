@@ -51,16 +51,12 @@ def PostFunc():
 
     RecpieLable = Label(TabInRecipeTab, text = PostingText, font =('Courier', 18))  
     RecpieLable.pack()  
-
-    file = open("myfile.txt","w") #creates file
-    file.writelines(PostingText)  
     
 
     FStrText = (f"{PostingText}")
 
 
     send(connection, FStrText)
-    send(connection, "myfile.txt")
 root = tb.Window(themename="darkly")
 
 #root = Tk()
