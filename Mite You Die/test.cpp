@@ -1,9 +1,10 @@
 #include <iostream>
 #include "raylib.h"
+#include "stdio.h"
 using namespace std;
 
-void pain()
+void player()
 {
-    DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
-};
+    
+}
 

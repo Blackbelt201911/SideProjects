@@ -20,7 +20,7 @@ int main(void)
 
             ClearBackground(RAYWHITE);
 
-            pain();
+            player();
 
         EndDrawing();
 
